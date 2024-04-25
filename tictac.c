@@ -37,16 +37,13 @@ char winner(int x, int y, char table[x][y]) {
 }
 
 int main() {
-
-
-
     char table[7][11] = {"   |   |   ",
               	         "   |   |   ",
-		         "---|---|---",
-		         "   |   |   ",
-		         "---|---|---",
-		         "   |   |   ",
-		         "   |   |   "};
+		                 "---|---|---",
+		                 "   |   |   ",
+		                 "---|---|---",
+		                 "   |   |   ",
+		                 "   |   |   "};
 
     char guide[7][11] = {"   |   |   ",
                          " 1 | 2 | 3 ",
@@ -60,49 +57,58 @@ int main() {
     int* placed = (int*)calloc(9, sizeof(int));
     int input, x, y, turn = 2;
     char keep;
+	int flag = 1;
     draw(7, 11, table, guide);
     while(1) {
-	if (turn % 2 == 0) {
-	    printf("Its X's turn.\nEnter a square: ");
-	}
-	else {
-	    printf("Its O's turn.\nEnter a square: ");
-	}
-	invalid:
-	input = getchar();
-	flushbuffer;
-	input -= 48;
-	if (!placed[input-1] && input < 10 && input > 0) {
-	    x = toDraw[input-1][0];
-	    y = toDraw[input-1][1];
-	    if (turn % 2 == 0) {
-	        table[x][y] = 'X';
-	    }
-	    else {
-                table[x][y] = 'O';
-	    }
-	    placed[input-1] = input;
-	    turn++;
-	    draw(7, 11, table, guide);
-        }
-	else {
-	    printf("\nInvalid Square.\nTry again: ");
-	    goto invalid;
-	}
-	keep = winner(7, 11, table);
-	if (keep != '\0' && keep != ' ') {
-	    printf("\nThe Winner is player %c, congratulations.\n", keep);
-	    free(placed);
-	    return 0;
-	}
-	if (turn - 2 == 9) {
-	    printf("\nThe game ends in a draw.\n");
-	    free(placed);
-	    return 0;
-	}
+		flag = 1;
+		if (turn % 2 == 0) {
+			printf("Its X's turn.\nEnter a square: ");
+		}
+		else {
+			printf("Its O's turn.\nEnter a square: ");
+		}
+		while (flag) {
+			invalid:
+			input = getchar();
+			flushbuffer;
+			input -= 48;
+			if (!placed[input-1] && input < 10 && input > 0) {
+				x = toDraw[input-1][0];
+				y = toDraw[input-1][1];
+				if (turn % 2 == 0) {
+					table[x][y] = 'X';
+				}
+				else {
+						table[x][y] = 'O';
+				}
+				placed[input-1] = input;
+				turn++;
+				draw(7, 11, table, guide);
+				flag = 0;
+				}
+			else {
+				printf("\nInvalid Square.\nTry again: ");
+			}
+		}
+		keep = winner(7, 11, table);
+		if (keep != '\0' && keep != ' ') {
+			printf("\nThe Winner is player %c, congratulations.\n", keep);
+			free(placed);
+			return 0;
+		}
+		if (turn - 2 == 9) {
+			printf("\nThe game ends in a draw.\n");
+			free(placed);
+			return 0;
+		}
     }
     return 0;
 }
+
+
+
+
+
 
 
 
